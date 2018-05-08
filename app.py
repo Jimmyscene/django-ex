@@ -81,7 +81,7 @@ def jobs():
         )
         pod = data.json()['items'][0]['message'].split("Created pod: ")[1]
         pod_data = requests.get(base_api + "/pods/" + pod + "/log", **friv)
-        return jsonify(pod_data.text)
+        return "<body>" + pod_data.text + "</body>"
 
 
 
