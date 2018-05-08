@@ -133,7 +133,7 @@
           }
         ],
         "postCommit": {
-          "script": "./manage.py test"
+          "script": "echo postcommit"
         }
       }
     },

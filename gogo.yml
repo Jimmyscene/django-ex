@@ -1,0 +1,7 @@
+commands:
+    - oc new-project ${PROJECT_NAME}
+    - oc new-app openshift/templates/django.json -p SOURCE_REPOSITORY_URL=https://github.com/Jimmyscene/django-ex.git
+paramaters:
+    name: PROJECT_NAME
+    description: Project Name
+    
