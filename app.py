@@ -35,11 +35,9 @@ def jobs():
                     "image": "perl",
                     "command": [
                     "perl",
-                    "-e",
-                    "print hi"
-                    # "-Mbignum=bpi",
-                    # "-wle",
-                    # "print bpi(2000)"
+                    "-Mbignum=bpi",
+                    "-wle",
+                    "print bpi(3)"
                     ]
                 }
                 ],
