@@ -2,6 +2,7 @@ import json
 import requests
 import time
 import urllib3
+import random
 from flask import Flask, jsonify
 from urllib import parse
 application = app = Flask(__name__)
@@ -14,6 +15,7 @@ def hello():
 @app.route("/jobs")
 def jobs():
     from uuid import uuid4
+    tag = random.choice(["latest","5", "5.26", "5.22"])
     name = "pi-" + str(uuid4())
     job = {
         "apiVersion": "batch/v1",
@@ -32,12 +34,13 @@ def jobs():
                 "containers": [
                 {
                     "name": name,
-                    "image": "perl",
+                    "image": "perl" + ":" + tag,
                     "command": [
-                    "perl",
-                    "-Mbignum=bpi",
-                    "-wle",
-                    "print bpi(3)"
+                        "perl",
+                        "-v"
+                        # "-Mbignum=bpi",
+                        # "-wle",
+                        # "print bpi(3)"
                     ]
                 }
                 ],
