@@ -2,13 +2,12 @@ import json
 import requests
 import time
 import urllib3
-import random
 from flask import Flask  # , jsonify
 from urllib import parse
 application = app = Flask(__name__)
 namespace = "flask-example"
-# token = open("/var/run/secrets/kubernetes.io/serviceaccount/token").read()
-token = "cLPT2IR0lYKps2UFmSrNyVMU84GrPM22TQ7S1mjtWQU"
+token = open("/var/run/secrets/kubernetes.io/serviceaccount/token").read()
+# token = "cLPT2IR0lYKps2UFmSrNyVMU84GrPM22TQ7S1mjtWQU"
 
 
 @app.route("/")
@@ -24,7 +23,6 @@ def healthz():
 @app.route("/jobs")
 def jobs():
     from uuid import uuid4
-    # tag = random.choice(["latest", "5", "5.26", "5.22"])
     name = "pi-" + str(uuid4())
     job = {
         "apiVersion": "batch/v1",
@@ -32,6 +30,7 @@ def jobs():
         "metadata": {
             "name": name
         },
+
         "spec": {
             "parallelism": 1,
             "completions": 1,
@@ -43,19 +42,14 @@ def jobs():
                     "containers": [
                         {
                             "name": name,
-                            # "image": "perl" + ":" + tag,
                             "image": "svs-gitlab.cisco.com:4567/automation/agilis_robot/user:1.2.0",
                             "imagePullSecrets": [
                                 {"name": "docker-private"}
                             ],
-                            "insecure-skip-tls-verify": True,
                             "imagePullPolicy": "IfNotPresent",
                             "command": [
                                 "robot",
                                 "--version"
-                                # "-Mbignum=bpi",
-                                # "-wle",
-                                # "print bpi(3)"
                             ]
                         }
                     ],
