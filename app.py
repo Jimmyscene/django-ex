@@ -3,19 +3,21 @@ import requests
 import time
 import urllib3
 import random
-from flask import Flask, jsonify
+from flask import Flask  # , jsonify
 from urllib import parse
 application = app = Flask(__name__)
 namespace = "from-scratch"
+
 
 @app.route("/")
 def hello():
     return "<h1 style='color:blue'>Hellso There!</h1>"
 
+
 @app.route("/jobs")
 def jobs():
     from uuid import uuid4
-    tag = random.choice(["latest","5", "5.26", "5.22"])
+    tag = random.choice(["latest", "5", "5.26", "5.22"])
     name = "pi-" + str(uuid4())
     job = {
         "apiVersion": "batch/v1",
@@ -27,34 +29,34 @@ def jobs():
             "parallelism": 1,
             "completions": 1,
             "template": {
-            "metadata": {
-                "name": name
-            },
-            "spec": {
-                "containers": [
-                {
-                    "name": name,
-                    "image": "perl" + ":" + tag,
-                    "command": [
-                        "perl",
-                        "-v"
-                        # "-Mbignum=bpi",
-                        # "-wle",
-                        # "print bpi(3)"
-                    ]
+                "metadata": {
+                    "name": name
+                },
+                "spec": {
+                    "containers": [
+                        {
+                            "name": name,
+                            "image": "perl" + ":" + tag,
+                            "command": [
+                                "perl",
+                                "-v"
+                                # "-Mbignum=bpi",
+                                # "-wle",
+                                # "print bpi(3)"
+                            ]
+                        }
+                    ],
+                    "restartPolicy": "OnFailure"
                 }
-                ],
-                "restartPolicy": "OnFailure"
-            }
             }
         }
     }
-    url = "https://192.168.99.100:8443/"
+    url = "192.168.99.100.nip.io"
     headers = {
-        # Anything but my local minishift token 
-        "Authorization": "Bearer 5i5eppaHeG0pzCdUXYNVsXpZ_xzDt8NjiiKNx0W6EjE"
+        # Anything but my local minishift token
+        "Authorization": "Bearer cLPT2IR0lYKps2UFmSrNyVMU84GrPM22TQ7S1mjtWQU"
     }
-    friv = {"headers":headers, "verify":False}
+    friv = {"headers": headers, "verify": False}
     req = requests.post(
         url + "apis/batch/v1/namespaces/" + namespace + "/jobs",
         data=json.dumps(job),
@@ -64,11 +66,18 @@ def jobs():
         raise Exception(req.text)
     else:
         resp = req.json()
+
         def get_job():
-            return requests.get(url + "apis/batch/v1/namespaces/" + namespace + "/jobs/" +  resp['metadata']['name'], **friv).json()
+            return requests.get(
+                url + "apis/batch/v1/namespaces/" + namespace + "/jobs/" + resp['metadata']['name'],
+                **friv
+            ).json()
+
         def check_job(job):
-            if not job['status']: return False
-            if not 'completionTime' in resp['status']: return False
+            if not job['status']:
+                return False
+            if 'completionTime' not in resp['status']:
+                return False
             return True
 
         while not check_job(resp):
@@ -76,13 +85,12 @@ def jobs():
             resp = get_job()
         base_api = url + "api/v1/namespaces/" + namespace
         data = requests.get(
-            base_api + "/events?fieldSelector=involvedObject.name" + parse.quote("=" + resp["metadata"]["name"] + ",involvedObject.namespace=" + namespace + ",involvedObject.kind=Job,involvedObject.uid=" + resp["metadata"]["uid"]),
+            base_api + "/events?fieldSelector=involvedObject.name" + parse.quote("=" + resp["metadata"]["name"] + ",involvedObject.namespace=" + namespace + ",involvedObject.kind=Job,involvedObject.uid=" + resp["metadata"]["uid"]),  # noqa
             **friv
         )
         pod = data.json()['items'][0]['message'].split("Created pod: ")[1]
         pod_data = requests.get(base_api + "/pods/" + pod + "/log", **friv)
         return "<body>" + pod_data.text + "</body>"
-
 
 
 if __name__ == "__main__":
