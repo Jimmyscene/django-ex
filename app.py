@@ -51,7 +51,7 @@ def jobs():
                             "insecure-skip-tls-verify": True,
                             "imagePullPolicy": "IfNotPresent",
                             "command": [
-                                "perl",
+                                "robot",
                                 "-v"
                                 # "-Mbignum=bpi",
                                 # "-wle",
