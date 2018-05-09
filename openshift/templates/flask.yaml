@@ -2,7 +2,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: flask-example
+  name: "${NAME}"
   annotations:
     openshift.io/display-name: Flask
     description: Sample Flask Openshifty Stuff
@@ -16,8 +16,8 @@ metadata:
     openshift.io/support-url: https://access.redhat.com
     template.openshift.io/bindable: 'false'
 labels:
-  template: flask-example
-  app: flask-example
+  template: "${NAME}"
+  app: "${NAME}"
 message: |-
   The following service(s) have been created in your project: ${NAME}.
   For more information about using this template, including OpenShift considerations, see https://github.com/openshift/django-ex/blob/master/README.md.
@@ -107,7 +107,7 @@ objects:
       imageChangeParams:
         automatic: true
         containerNames:
-        - flask-example
+        - "${NAME}"
         from:
           kind: ImageStreamTag
           name: "${NAME}:latest"

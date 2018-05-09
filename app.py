@@ -92,7 +92,7 @@ def jobs():
         )
         pod = data.json()['items'][0]['message'].split("Created pod: ")[1]
         pod_data = requests.get(base_api + "/pods/" + pod + "/log", **friv)
-        return "<body>" + pod_data.text + "</body>"
+        return "<body><pre>" + pod_data.text + "</pre></body>"
 
 
 if __name__ == "__main__":
