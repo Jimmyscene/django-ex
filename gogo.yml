@@ -14,4 +14,4 @@
     - name: Give edit permissions to default sa
       command: oc policy add-role-to-user edit -z default
     - name: Add docker config
-      command: oc secrets new docker-private .dockerconfigjson=$HOME/.docker/config.json
+      command: oc secrets --insecure-skip-tls-verify new docker-private .dockerconfigjson=$HOME/.docker/config.json

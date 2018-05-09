@@ -7,7 +7,8 @@ from flask import Flask  # , jsonify
 from urllib import parse
 application = app = Flask(__name__)
 namespace = "flask-example"
-token = open("/var/run/secrets/kubernetes.io/serviceaccount/token").read()
+# token = open("/var/run/secrets/kubernetes.io/serviceaccount/token").read()
+token = "cLPT2IR0lYKps2UFmSrNyVMU84GrPM22TQ7S1mjtWQU"
 
 
 @app.route("/")
@@ -23,7 +24,7 @@ def healthz():
 @app.route("/jobs")
 def jobs():
     from uuid import uuid4
-    tag = random.choice(["latest", "5", "5.26", "5.22"])
+    # tag = random.choice(["latest", "5", "5.26", "5.22"])
     name = "pi-" + str(uuid4())
     job = {
         "apiVersion": "batch/v1",
@@ -42,7 +43,12 @@ def jobs():
                     "containers": [
                         {
                             "name": name,
-                            "image": "perl" + ":" + tag,
+                            # "image": "perl" + ":" + tag,
+                            "image": "svs-gitlab.cisco.com:4567/automation/svs",
+                            "imagePullSecrets": [
+                                {"name": "docker-private"}
+                            ],
+                            "insecure-skip-tls-verify": True,
                             "imagePullPolicy": "IfNotPresent",
                             "command": [
                                 "perl",
