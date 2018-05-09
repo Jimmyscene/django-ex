@@ -5,9 +5,13 @@
   tasks:
     - name: Clean up old project
       command: oc delete all --selector app={{project_name}}
-    - name: Delete secrets
+    - name: Delete project secrets
       command: oc delete secret --selector app={{project_name}}
+    - name: Delete docker config secrets
+      command: oc delete secret docker-private
     - name: Create new App
       command: oc new-app openshift/templates/flask.yaml -p SOURCE_REPOSITORY_URL=https://github.com/Jimmyscene/django-ex.git
     - name: Give edit permissions to default sa
       command: oc policy add-role-to-user edit -z default
+    - name: Add docker config
+      command: oc secrets new docker-private .dockerconfigjson=$HOME/.docker/config.json
