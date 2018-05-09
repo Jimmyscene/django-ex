@@ -15,6 +15,11 @@ def hello():
     return "<h1 style='color:blue'>Hellso There!</h1>"
 
 
+@app.route("/healthz")
+def healthz():
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+
 @app.route("/jobs")
 def jobs():
     from uuid import uuid4
