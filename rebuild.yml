@@ -1,0 +1,10 @@
+# Ansible doesn't work on windows. I should've expected this
+---
+- hosts: localhost
+  vars:
+    PROJECT_NAME: "flask-example"
+  tasks:
+    # - shell: oc new-project ${PROJECT_NAME}
+    - shell: oc delete all --selector app=${PROJECT_NAME}
+    - shell: oc delete secret --selector app=${PROJECT_NAME}
+    - shell: oc new-app openshift/templates/flask.yaml -p SOURCE_REPOSITORY_URL=https://github.com/Jimmyscene/django-ex.git
