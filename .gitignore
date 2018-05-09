@@ -68,3 +68,6 @@ pyvenv.cfg
 
 # Vscode
 .vscode
+
+# Ansible
+*.retry

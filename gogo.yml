@@ -1,23 +1,13 @@
--hosts: local
-vars:
-    name: PROJECT_NAME
-    description: Project Name
-    value: flask-example
+- hosts: localhost
+  vars:
+      project_name: flask-example
 
-
-  commands:
-    # - oc new-project ${PROJECT_NAME}
+  tasks:
     - name: Clean up old project
-      command: oc delete all --selector app=${PROJECT_NAME}
+      command: oc delete all --selector app={{project_name}}
     - name: Delete secrets
-      command: oc delete secret --selector app=${PROJECT_NAME}
+      command: oc delete secret --selector app={{project_name}}
     - name: Create new App
       command: oc new-app openshift/templates/flask.yaml -p SOURCE_REPOSITORY_URL=https://github.com/Jimmyscene/django-ex.git
     - name: Give edit permissions to default sa
       command: oc policy add-role-to-user edit -z default
-
-
-vars:
-    name: PROJECT_NAME
-    description: Project Name
-

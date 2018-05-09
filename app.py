@@ -37,7 +37,8 @@ def jobs():
                     "containers": [
                         {
                             "name": name,
-                            "image": "perl" + ":" + tag,
+                            "image": "openshift/perl" + ":" + tag,
+                            "imagePullPolicy": "IfNotPresent",
                             "command": [
                                 "perl",
                                 "-v"
