@@ -6,7 +6,8 @@ import random
 from flask import Flask  # , jsonify
 from urllib import parse
 application = app = Flask(__name__)
-namespace = "from-scratch"
+namespace = "flask-example"
+token = open("/var/run/secrets/kubernetes.io/serviceaccount/token").read()
 
 
 @app.route("/")
@@ -51,10 +52,10 @@ def jobs():
             }
         }
     }
-    url = "192.168.99.100.nip.io"
+    url = "https://192.168.99.100:8443/"
     headers = {
         # Anything but my local minishift token
-        "Authorization": "Bearer cLPT2IR0lYKps2UFmSrNyVMU84GrPM22TQ7S1mjtWQU"
+        "Authorization": "Bearer " + token
     }
     friv = {"headers": headers, "verify": False}
     req = requests.post(
@@ -96,3 +97,6 @@ def jobs():
 if __name__ == "__main__":
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     application.run(host='0.0.0.0')
+
+
+# oc policy add-role-to-user edit -z default
