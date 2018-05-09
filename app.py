@@ -44,7 +44,7 @@ def jobs():
                         {
                             "name": name,
                             # "image": "perl" + ":" + tag,
-                            "image": "svs-gitlab.cisco.com:4567/automation/svs",
+                            "image": "svs-gitlab.cisco.com:4567/automation/agilis_robot/user:1.2.0",
                             "imagePullSecrets": [
                                 {"name": "docker-private"}
                             ],
@@ -52,7 +52,7 @@ def jobs():
                             "imagePullPolicy": "IfNotPresent",
                             "command": [
                                 "robot",
-                                "-v"
+                                "--version"
                                 # "-Mbignum=bpi",
                                 # "-wle",
                                 # "print bpi(3)"
